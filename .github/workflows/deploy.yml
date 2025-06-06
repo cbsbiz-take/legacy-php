@@ -1,0 +1,26 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches:
+      - staging
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Generate tag
+        id: generate-tag
+        run: |
+          tag="staging-$(TZ=Asia/Tokyo date +%Y%m%d-%H%M%S)"
+          echo "::generate tag::$tag"
+          echo "tag=$tag" >> $GITHUB_OUTPUT
+          git tag $tag
+          git push origin $tag
+      - name: Deploy
+        run: |
+          echo ${{ steps.generate-tag.outputs.tag }}
