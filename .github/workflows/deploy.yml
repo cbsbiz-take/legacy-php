@@ -22,13 +22,13 @@ jobs:
           echo ${{ secrets.OPENVPN_FILE }} | base64 --decode > openvpn.open
       - name: Connect OpenVPN
         run: |
-          openvpn --config openvpn.open --daemon --log /tmp/openvpn.log --verb 4
+          sudo openvpn --config openvpn.open --daemon --log /tmp/openvpn.log --verb 4
           sleep 10
       - name: Show OpenVPN logs
         run: cat /tmp/openvpn.log || echo "Log not found"
       - name: Run command
         run: |
-          ping -c 4 192.168.0.239
+          ping -c 4 192.168.0.1
       # - name: Run command
       #   run: |
       #     ip addr
