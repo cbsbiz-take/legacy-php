@@ -26,7 +26,7 @@ jobs:
           sleep 10
       - name: Run command
         run: |
-          sudo ip route add 192.168.0.0/24 dev tun0
+          ip addr
           ip route
       - name: Disconnect OpenVPN
         run: |
