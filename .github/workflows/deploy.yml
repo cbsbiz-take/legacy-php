@@ -22,8 +22,7 @@ jobs:
           echo ${{ secrets.OPENVPN_FILE }} | base64 --decode > openvpn.ovpn
       - name: Connect OpenVPN
         run: |
-          sudo openvpn --config openvpn.ovpn --log /tmp/openvpn.log --verb 4 --daemon
-          sleep 10
+          sudo openvpn --config openvpn.ovpn --verb 4
       - name: Show OpenVPN logs
         run: cat /tmp/openvpn.log || echo "Log not found"
       - name: Run command
