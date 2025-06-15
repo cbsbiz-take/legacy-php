@@ -28,6 +28,13 @@ jobs:
         run: |
           ip addr
           ip route
+      - name: Check for tun device
+        run: |
+          if [ -c /dev/net/tun ]; then
+            echo "TUN device is present"
+          else
+            echo "TUN device is NOT available"
+          fi
       - name: Disconnect OpenVPN
         run: |
           pkill openvpn
