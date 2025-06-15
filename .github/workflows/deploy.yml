@@ -26,6 +26,9 @@ jobs:
           sleep 10
       - name: Show OpenVPN logs
         run: cat /tmp/openvpn.log || echo "Log not found"
+      - name: Run command
+        run: |
+          ping -c 4 192.168.0.239
       # - name: Run command
       #   run: |
       #     ip addr
