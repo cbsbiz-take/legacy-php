@@ -19,68 +19,16 @@ jobs:
           sudo apt install -y openvpn
       - name: Create OpenVPN configuration file
         run: |
-          echo ${{ secrets.OPENVPN_FILE }} | base64 --decode > openvpn.open
+          echo ${{ secrets.OPENVPN_FILE }} | base64 --decode > openvpn.ovpn
       - name: Connect OpenVPN
         run: |
-          sudo -b openvpn --config openvpn.open --log /tmp/openvpn.log --verb 4
+          sudo openvpn --config openvpn.ovpn --log /tmp/openvpn.log --verb 4 --daemon
           sleep 10
       - name: Show OpenVPN logs
         run: cat /tmp/openvpn.log || echo "Log not found"
       - name: Run command
         run: |
           ping -c 4 192.168.0.1
-      # - name: Run command
-      #   run: |
-      #     ip addr
-      #     ip route
-      # - name: Check for tun device
-      #   run: |
-      #     if [ -c /dev/net/tun ]; then
-      #       echo "TUN device is present"
-      #     else
-      #       echo "TUN device is NOT available"
-      #     fi
       - name: Disconnect OpenVPN
         run: |
           pkill openvpn
-      # - name: Generate tag
-      #   id: generate-tag
-      #   run: |
-      #     tag="staging-$(TZ=Asia/Tokyo date +%Y%m%d-%H%M%S)"
-      #     echo "::generate tag::$tag"
-      #     echo "tag=$tag" >> $GITHUB_OUTPUT
-      #     git tag $tag
-      #     git push origin $tag
-      # - name: Configure AWS credentials
-      #   uses: aws-actions/configure-aws-credentials@v1
-      #   with:
-      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     aws-region: ap-northeast-1
-      # - name: Login to Amazon ECR
-      #   id: login-ecr
-      #   uses: aws-actions/amazon-ecr-login@v1
-      # - name: Build, tag, and push image to Amazon ECR
-      #   id: build-image
-      #   env:
-      #     ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-      #     ECR_REPOSITORY: test-namespace/test-repo
-      #     IMAGE_TAG: ${{ github.sha }}
-      #   run: |
-      #     docker build --platform linux/amd64 -f ./deploy/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-      #     docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-      #     echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
-      # - name: Fill in the new image ID in the Amazon ECS task definition
-      #   id: task-def
-      #   uses: aws-actions/amazon-ecs-render-task-definition@v1
-      #   with:
-      #     task-definition: deploy/test-task-define.json
-      #     container-name: test-container-1
-      #     image: ${{ steps.build-image.outputs.image }}
-      # - name: Deploy Amazon ECS task definition
-      #   uses: aws-actions/amazon-ecs-deploy-task-definition@v2
-      #   with:
-      #     task-definition: ${{ steps.task-def.outputs.task-definition }}
-      #     service: test-ecs-service
-      #     cluster: test-ecs-cluster
-      #     wait-for-service-stability: true
