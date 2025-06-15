@@ -26,7 +26,8 @@ jobs:
           sleep 10
       - name: Run command
         run: |
-          curl 192.168.0.239
+          curl -s https://httpbin.org/headers
+          curl -s 192.168.0.1
       - name: Disconnect OpenVPN
         run: |
           pkill openvpn
